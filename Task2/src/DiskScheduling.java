@@ -4,16 +4,17 @@
  * It calculates the total head movement required to process a sequence of disk requests.
  * The program can generate random disk requests or read them from a file.
  * It also calculates the number of changes in direction in the disk requests.
- * 
+ *
  * The main method demonstrates the usage of the implemented algorithms by generating random requests
  * and reading requests from a file. It prints the results of each algorithm, including the head movement
  * and the number of changes in direction.
- * 
+ *
  * The program also provides utility methods for reading requests from a file, generating random requests,
  * and implementing each disk scheduling algorithm.
- * 
+ *
  * Note: The program assumes a cylinder range from 0 to 4999.
  * Course: CS4310 Operating Systems Project 2
+ *
  * @author Kevin Wong
  * @since 4/30/2024
  */
@@ -25,20 +26,25 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-
 public class DiskScheduling {
 
     /**
-     * The main method is the entry point of the program.
-     * It performs disk scheduling algorithms on randomly generated requests and requests read from a file.
-     * It calculates the head movement and change of direction for each algorithm and prints the results.
+     * The main method is the entry point of the program. It performs disk
+     * scheduling algorithms on randomly generated requests and requests read
+     * from a file. It calculates the head movement and change of direction for
+     * each algorithm and prints the results.
      *
      * @param args The command line arguments.
      */
     public static void main(String[] args) {
 
         //Part A.
+        if (args.length == 0) {
+            System.err.println("Please enter a command line argument for the initial position.");
+            System.exit(1);
+        }
         int initialPosition = Integer.parseInt(args[0]);
+
         int[] requests = generateRandomRequests(1000); // Generate 1000 random requests
 
         // FCFS
@@ -54,7 +60,7 @@ public class DiskScheduling {
 
         newRequests[newRequests.length - 1] = 0;
         newRequests[newRequests.length - 2] = 4999;
-   
+
         // SCAN
         int scanHeadMovement = scan(initialPosition, requests);
         int scanChangeOfDirection = calculateChangeOfDirection(newRequests, "SCAN");
@@ -97,13 +103,14 @@ public class DiskScheduling {
         System.out.println("From input.txt requests:");
         System.out.println("FCFS (File) - Head Movement: " + fcfsFileHeadMovement + ", Change of Direction: " + fcfsFileChangeOfDirection);
         System.out.println("SSTF (File) - Head Movement: " + sstfFileHeadMovement + ", Change of Direction: " + sstfFileChangeOfDirection);
-        System.out.println("SCAN (File) - Head Movement: " + scanFileHeadMovement + ", Change of Direction: " + scanFileChangeOfDirection);
+        System.out.println("SCAN (File) - Head Movement(head direction is RIGHT): " + scanFileHeadMovement + ", Change of Direction: " + scanFileChangeOfDirection);
         System.out.println("C-SCAN (File) - Head Movement: " + cscanFileHeadMovement + ", Change of Direction: " + cscanFileChangeOfDirection);
 
     }
 
     /**
-     * Reads disk requests from a file and returns an array of integers representing the requests.
+     * Reads disk requests from a file and returns an array of integers
+     * representing the requests.
      *
      * @param fileName the name of the file to read the requests from
      * @return an array of integers representing the disk requests
@@ -145,7 +152,7 @@ public class DiskScheduling {
         movingUp = requests[0] < requests[1];
         for (int i = 1; i < requests.length; i++) {
             int request = requests[i];
-            if (((request < initialPosition && movingUp) || (request > initialPosition && !movingUp)) && (algorithm.equals("FCFS") || algorithm.equals("SSTF") )){
+            if (((request < initialPosition && movingUp) || (request > initialPosition && !movingUp)) && (algorithm.equals("FCFS") || algorithm.equals("SSTF"))) {
                 changeOfDirection++;
                 movingUp = !movingUp; // Change direction
             }
